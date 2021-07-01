@@ -157,6 +157,11 @@ main {
   font-size: 16px;
 }
 
+.error{
+  color: #f00;
+  font-size: 12px;
+}
+
 .bground {
   display: none;
   position: fixed;
