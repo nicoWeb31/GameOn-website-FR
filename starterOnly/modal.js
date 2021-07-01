@@ -15,6 +15,7 @@ const inputName = document.querySelector("#last");
 const birthday = document.querySelector("#birthdate");
 const formData = document.querySelectorAll(".formData");
 const cuCheckBox = document.querySelectorAll("#checkbox1");
+const closeBtn = document.querySelector(".close");
 
 const loc1 = document.querySelector("#location1");
 const loc2 = document.querySelector("#location2");
@@ -33,6 +34,7 @@ function launchModal() {
 
 //comfirm ok button
 btnSubmit.addEventListener("click", () => {
+  console.log("click submit");
   let error = "";
   if (inputName.value.length < 2) {
     error += "Veuillez entrer 2 caractères ou plus pour le champ du nom. \n";
@@ -60,11 +62,14 @@ btnSubmit.addEventListener("click", () => {
   }
 
   alert(error ? error : "résa ok ");
+  if (error === "") {
+    close();
+  }
 });
 
-/* ---------------------------- formulaire valid ---------------------------- */
-if(true){
-  btnSubmit.disabled = false;
+//TODO: close modal
+//close modal
+function close() {
+  modalbg.style.display = "none";
 }
-
-
+closeBtn.addEventListener("click", close);
