@@ -75,13 +75,13 @@ handleFormSubmit = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const condition = cuCheckBox.checked
+    const condition = cuCheckBox.checked;
     const firsValue = inputFirst.value.trim();
     const lastValue = inputName.value.trim();
     const emailValue = inputEmail.value.trim();
     const birthdayValue = birthday.value.trim();
     const quantityValue = +inputQuantity.value.trim();
-    console.log(quantityValue)
+    console.log(quantityValue);
     const citiesValues = getValueCheckBox(loc);
     const infoEvent = checkBox2.checked;
     const body = {
@@ -101,21 +101,35 @@ handleFormSubmit = (e) => {
         !body.email ||
         !body.birthday ||
         !body.cityValue.length > 0 ||
-        isNaN(body.nbrTournois) 
+        isNaN(body.nbrTournois)
     ) {
-        inputErrorHandler(inputName, ERR_LAST, lastErr);
-        inputErrorHandler(inputFirst, ERR_FIRST, firstErr);
-        inputErrorHandler(inputEmail, ERR_EMAIL, emailErr);
-        numberErrorHandler(inputQuantity, ERR_TOURNOIS, tournoisErr);
-        cityErrorHandler(loc, ERR_VILLE_CHOICE, cityErr);
-        birthDateErrorHandler(birthday, ERR_BIRTHDAY, birthErr);
+        // inputErrorHandler(inputName, ERR_LAST, lastErr);
+        inputErrorHandlerRefacto(valueControlLengthTwo(inputName))(
+            ERR_LAST,
+            lastErr
+        );
+        // inputErrorHandler(inputFirst, ERR_FIRST, firstErr);
+        inputErrorHandlerRefacto(valueControlLengthTwo(inputFirst))(
+            ERR_FIRST,
+            firstErr
+        );
+        // inputErrorHandler(inputEmail, ERR_EMAIL, emailErr);
+        inputErrorHandlerRefacto(valueControlLengthTwo(inputEmail))(
+            ERR_EMAIL,
+            emailErr
+        );
+        // numberErrorHandler(inputQuantity, ERR_TOURNOIS, tournoisErr);
+        inputErrorHandlerRefacto(valueExist(inputQuantity))(
+            ERR_TOURNOIS,
+            tournoisErr
+        );
+        // birthDateErrorHandler(birthday, ERR_BIRTHDAY, birthErr);
+        inputErrorHandlerRefacto(valueExist(birthday))(ERR_BIRTHDAY, birthErr);
+
         cityErrorHandler(loc, ERR_VILLE_CHOICE, cityErr);
         conditionErrorHandler(cuCheckBox, ERR_CONDITION, conditiontErr);
-        // alert("Erreur sur le formulaire !");
     } else {
-        //ajouter le body
-        console.log(body)
-        console.log('form ok ')
+        console.log(body, "form ok ");
         httpPostdata(body);
     }
 };
@@ -126,28 +140,36 @@ form.addEventListener("submit", handleFormSubmit);
 /* -------------------------------------------------------------------------- */
 /*                                    utils                                    */
 /* -------------------------------------------------------------------------- */
-const inputErrorHandler = (input, message, output) => {
-    if (input.value.length < 2) {
-        output.innerText = message;
-    } else {
-        output.innerText = "";
-    }
-};
+// const inputErrorHandler = (input, message, output) => {
+//     if (input.value.length < 2) {
+//         output.innerText = message;
+//     } else {
+//         output.innerText = "";
+//     }
+// };
 
-const birthDateErrorHandler = (input, message, output) => {
-    if (!input.value) {
-        output.innerText = message;
-    } else {
-        output.innerText = "";
-    }
-};
+// const birthDateErrorHandler = (input, message, output) => {
+//     if (!input.value) {
+//         output.innerText = message;
+//     } else {
+//         output.innerText = "";
+//     }
+// };
 
-const numberErrorHandler = (input, message, output) => {
-    if (!input.value) {
-        output.innerText = message;
-    } else {
-        output.innerText = "";
-    }
+// const numberErrorHandler = (input, message, output) => {
+//     if (!input.value) {
+//         output.innerText = message;
+//     } else {
+//         output.innerText = "";
+//     }
+// };
+
+const clearForm = () => {
+    inputFirst.value = null;
+    inputName.value = null;
+    inputEmail.value = null;
+    birthday.value = null;
+    inputQuantity.value = null;
 };
 
 const conditionErrorHandler = (input, message, output) => {
@@ -196,8 +218,28 @@ async function httpPostdata(body) {
             }
         })
         .then(function () {
-            alert("votre resavation à été effectué !");
             console.log(body);
+            clearForm();
             close();
+            alert("votre resavation à été effectué !");
         });
 }
+/* -------------------------- cuuring test refacto -------------------------- */
+
+const valueControlLengthTwo = (input) => {
+    return input.value.length < 2;
+};
+
+const valueExist = (input) => {
+    return !input.value;
+};
+
+const inputErrorHandlerRefacto = (fn) => {
+    return function message(message, output) {
+        if (fn) {
+            output.innerText = message;
+        } else {
+            output.innerText = "";
+        }
+    };
+};
