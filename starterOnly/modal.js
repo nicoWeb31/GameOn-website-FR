@@ -1,5 +1,10 @@
 const ERR_LAST = "Veuillez entrer 2 caractères ou plus pour le champ du nom.";
+const ERR_FIRST =
+    "Veuillez entrer 2 caractères ou plus pour le champ du prénom.";
 const ERR_BIRTHDAY = "Vous devez entrer votre date de naissance.";
+const ERR_TOURNOIS = "Vous devez entrer une valeur.";
+
+const ERR_EMAIL = "Vous devez entrer votre Email.";
 const ERR_CONDITION =
     "Vous devez vérifier que vous acceptez les termes et conditions.";
 const ERR_VILLE_CHOICE = "Vous devez choisir une option.\n";
@@ -19,25 +24,30 @@ function editNav() {
 const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const btnSubmit = document.querySelector(".btn-submit");
+const inputFirst = document.querySelector("#first");
 const inputName = document.querySelector("#last");
+const inputEmail = document.querySelector("#email");
 const birthday = document.querySelector("#birthdate");
+const inputQuantity = document.querySelector("#quantity");
 const formData = document.querySelectorAll(".formData");
 const cuCheckBox = document.querySelector("#checkbox1");
+const checkBox2 = document.querySelector("#checkbox2");
 const closeBtn = document.querySelector(".close");
+const form = document.querySelector("#form");
 
 //loc Element
-const loc1 = document.querySelector("#location1");
-const loc2 = document.querySelector("#location2");
-const loc3 = document.querySelector("#location3");
-const loc4 = document.querySelector("#location4");
-const loc5 = document.querySelector("#location5");
-const loc6 = document.querySelector("#location6");
+const loc = document.getElementsByName("loc");
+
+//input location
 
 //ErrorElement
 const lastErr = document.getElementById("lastError");
 const birthErr = document.getElementById("birthdateError");
 const cityErr = document.getElementById("cityError");
 const conditiontErr = document.getElementById("conditionError");
+const firstErr = document.getElementById("firstError");
+const emailErr = document.getElementById("emailError");
+const tournoisErr = document.getElementById("tournoisError");
 
 /* -------------------------------------------------------------------------- */
 /*                                gestoin Modal                               */
@@ -61,90 +71,133 @@ closeBtn.addEventListener("click", close);
 /*                              gestion du submit                             */
 /* -------------------------------------------------------------------------- */
 
-// validation form
-const formIsValid = () => {
-    alert("votre resavation à été effectué !");
+handleFormSubmit = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const condition = cuCheckBox.checked
+    const firsValue = inputFirst.value.trim();
+    const lastValue = inputName.value.trim();
+    const emailValue = inputEmail.value.trim();
+    const birthdayValue = birthday.value.trim();
+    const quantityValue = +inputQuantity.value.trim();
+    console.log(quantityValue)
+    const citiesValues = getValueCheckBox(loc);
+    const infoEvent = checkBox2.checked;
+    const body = {
+        name: firsValue,
+        lastName: lastValue,
+        email: emailValue,
+        birthday: birthdayValue,
+        nbrTournois: quantityValue,
+        cityValue: citiesValues,
+        infoEvent,
+    };
+
+    if (
+        !condition ||
+        body.name.length < 2 ||
+        body.lastName.length < 2 ||
+        !body.email ||
+        !body.birthday ||
+        !body.cityValue.length > 0 ||
+        isNaN(body.nbrTournois) 
+    ) {
+        inputErrorHandler(inputName, ERR_LAST, lastErr);
+        inputErrorHandler(inputFirst, ERR_FIRST, firstErr);
+        inputErrorHandler(inputEmail, ERR_EMAIL, emailErr);
+        numberErrorHandler(inputQuantity, ERR_TOURNOIS, tournoisErr);
+        cityErrorHandler(loc, ERR_VILLE_CHOICE, cityErr);
+        birthDateErrorHandler(birthday, ERR_BIRTHDAY, birthErr);
+        cityErrorHandler(loc, ERR_VILLE_CHOICE, cityErr);
+        conditionErrorHandler(cuCheckBox, ERR_CONDITION, conditiontErr);
+        // alert("Erreur sur le formulaire !");
+    } else {
+        //ajouter le body
+        console.log(body)
+        console.log('form ok ')
+        httpPostdata(body);
+    }
 };
 
-handleFormSubmit = () => {
-    birthdayErrorInner(isBirthDayError());
-    lastNameError(isLastNameErr());
-    handleConditiontErr(isConditionalErr());
-
-    // formIsValid();
-    // close();
-    // if (firstNameError() && BirthdayError() && handleConditiontErr()) {
-    //   console.log("err");
-    // } else {
-    // }
-};
-
-btnSubmit.addEventListener("submit", handleFormSubmit);
-
-// () => {
-// if (inputName.value.length < 2) {
-//   error += "Veuillez entrer 2 caractères ou plus pour le champ du nom. \n";
-// }
-
-// if (!birthday.value) {
-//   error += "Vous devez entrer votre date de naissance. \n";
-// }
-
-// if (!cuCheckBox[0].checked) {
-//   error +=
-//     "Vous devez vérifier que vous acceptez les termes et conditions. \n";
-// }
-
-// if (
-
-// ) {
-//   error += ;
-// }
+//form submit
+form.addEventListener("submit", handleFormSubmit);
 
 /* -------------------------------------------------------------------------- */
-/*                             gestion des erreurs                            */
+/*                                    utils                                    */
 /* -------------------------------------------------------------------------- */
-
-isLastNameErr = () => {
-    console.log(inputName.value.length < 2);
-    return inputName.value.length < 2;
-};
-lastNameError = (fn) => {
-    fn ? (lastErr.innerText = ERR_LAST) : (lastErr.innerText = "");
-};
-
-isBirthDayError = () => {
-    return !birthday.value;
-};
-birthdayErrorInner = (fn) => {
-    fn ? (birthErr.innerText = ERR_BIRTHDAY) : (birthErr.innerText = "");
+const inputErrorHandler = (input, message, output) => {
+    if (input.value.length < 2) {
+        output.innerText = message;
+    } else {
+        output.innerText = "";
+    }
 };
 
-// cityErr = () => {
-//   if (
-//     !loc1.value ||
-//     !loc2.value ||
-//     !loc3.value ||
-//     !loc4.value ||
-//     !loc4.value ||
-//     !loc5.value ||
-//     !loc6.value
-//   ) {
-//     const err = ERR_VILLE_CHOICE;
-//     cityErr.innerText = err;
-//     return err;
-//   } else {
-//     cityErr.innerText = err;
-//   }
-// };
-
-isConditionalErr = () => {
-  console.log(cuCheckBox)
-    return cuCheckBox.value === "ok";
+const birthDateErrorHandler = (input, message, output) => {
+    if (!input.value) {
+        output.innerText = message;
+    } else {
+        output.innerText = "";
+    }
 };
-handleConditiontErr = (fn) => {
 
-    fn
-        ? (conditiontErr.innerText = ERR_CONDITION)
-        : (conditiontErr.innerText = "");
+const numberErrorHandler = (input, message, output) => {
+    if (!input.value) {
+        output.innerText = message;
+    } else {
+        output.innerText = "";
+    }
 };
+
+const conditionErrorHandler = (input, message, output) => {
+    if (!input.checked) {
+        output.innerText = message;
+    } else {
+        output.innerText = "";
+    }
+};
+
+const cityErrorHandler = (input, message, output) => {
+    for (let i = 0; i < input.length; i++) {
+        if (input[i].checked) {
+            output.innerText = "";
+            return true;
+        } else {
+            output.innerText = message;
+        }
+    }
+};
+
+const getValueCheckBox = (arr) => {
+    let valueArray = [];
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i].checked) {
+            valueArray.push(arr[i].value);
+        }
+    }
+    return valueArray;
+};
+
+//call http method
+async function httpPostdata(body) {
+    return fetch("https://mockbin.com/request", {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        /* ----------------------------- TODO:add value ----------------------------- */
+        body: JSON.stringify(body),
+    })
+        .then(function (res) {
+            if (res.ok) {
+                return res.json();
+            }
+        })
+        .then(function () {
+            alert("votre resavation à été effectué !");
+            console.log(body);
+            close();
+        });
+}

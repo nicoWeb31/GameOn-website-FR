@@ -58,11 +58,12 @@
           <span class="close"></span>
           <div class="modal-body">
             <form
-              name="reserve"
-              action="index.html"
-              method="get"
-              onsubmit="return validate();"
+            id="form"
             >
+            <!-- name="reserve"
+            action="index.html"
+            method="get"
+            onsubmit="return validate();" -->
               <div class="formData">
                 <label for="first">Prénom</label><br />
                 <input
@@ -95,6 +96,8 @@
                   id="email"
                   name="email"
                 /><br />
+                <small class="error" id="emailError"></small>
+
               </div>
               <!-- -------------------------- date de naissance -------------------------- -->
               <div class="formData">
@@ -104,7 +107,6 @@
                   type="date"
                   id="birthdate"
                   name="birthdate"
-                  required
                 /><br />
                 <!------------ TODO:"Vous devez entrer votre date de naissance." ------------>
                 <small class="error" id="birthdateError"></small>
@@ -122,6 +124,8 @@
                   min="0"
                   max="99"
                 />
+                <small class="error" id="tournoisError"></small>
+
               </div>
               <p class="text-label">Quelles villes ?</p>
               <div class="formData">
@@ -129,7 +133,7 @@
                   class="checkbox-input"
                   type="checkbox"
                   id="location1"
-                  name="location"
+                  name="loc"
                   value="New York"
                 />
                 <label class="checkbox-label" for="location1">
@@ -140,7 +144,7 @@
                   class="checkbox-input"
                   type="checkbox"
                   id="location2"
-                  name="location"
+                  name="loc"
                   value="San Francisco"
                 />
                 <label class="checkbox-label" for="location2">
@@ -151,7 +155,7 @@
                   class="checkbox-input"
                   type="checkbox"
                   id="location3"
-                  name="location"
+                  name="loc"
                   value="Seattle"
                 />
                 <label class="checkbox-label" for="location3">
@@ -162,7 +166,7 @@
                   class="checkbox-input"
                   type="checkbox"
                   id="location4"
-                  name="location"
+                  name="loc"
                   value="Chicago"
                 />
                 <label class="checkbox-label" for="location4">
@@ -173,7 +177,7 @@
                   class="checkbox-input"
                   type="checkbox"
                   id="location5"
-                  name="location"
+                  name="loc"
                   value="Boston"
                 />
                 <label class="checkbox-label" for="location5">
@@ -184,7 +188,7 @@
                   class="checkbox-input"
                   type="checkbox"
                   id="location6"
-                  name="location"
+                  name="loc"
                   value="Portland"
                 />
                 <label class="checkbox-label" for="location6">
@@ -201,6 +205,7 @@
                   type="checkbox"
                   id="checkbox1"
                   name="condition"
+                  value="1"
 
                 />
                 <label class="checkbox2-label" for="checkbox1" required>
