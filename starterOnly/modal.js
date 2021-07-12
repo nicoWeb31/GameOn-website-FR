@@ -104,10 +104,15 @@ handleFormSubmit = (e) => {
         isNaN(body.nbrTournois)
     ) {
         // inputErrorHandler(inputName, ERR_LAST, lastErr);
-        inputErrorHandlerRefacto(valueControlLengthTwo(inputName))(
-            ERR_LAST,
-            lastErr
+        // inputErrorHandlerRefacto(valueControlLengthTwo(inputName))(
+        //     ERR_LAST,
+        //     lastErr
+        // );
+
+        inputErrorHandlerRefacto3(valueControlLengthTwo(inputName))(lastErr)(
+            ERR_LAST
         );
+
         // inputErrorHandler(inputFirst, ERR_FIRST, firstErr);
         inputErrorHandlerRefacto(valueControlLengthTwo(inputFirst))(
             ERR_FIRST,
@@ -140,29 +145,6 @@ form.addEventListener("submit", handleFormSubmit);
 /* -------------------------------------------------------------------------- */
 /*                                    utils                                    */
 /* -------------------------------------------------------------------------- */
-// const inputErrorHandler = (input, message, output) => {
-//     if (input.value.length < 2) {
-//         output.innerText = message;
-//     } else {
-//         output.innerText = "";
-//     }
-// };
-
-// const birthDateErrorHandler = (input, message, output) => {
-//     if (!input.value) {
-//         output.innerText = message;
-//     } else {
-//         output.innerText = "";
-//     }
-// };
-
-// const numberErrorHandler = (input, message, output) => {
-//     if (!input.value) {
-//         output.innerText = message;
-//     } else {
-//         output.innerText = "";
-//     }
-// };
 
 const clearForm = () => {
     inputFirst.value = null;
@@ -224,7 +206,7 @@ async function httpPostdata(body) {
             alert("votre resavation à été effectué !");
         });
 }
-/* -------------------------- cuuring test refacto -------------------------- */
+/* -------------------------- curing test refacto -------------------------- */
 
 const valueControlLengthTwo = (input) => {
     return input.value.length < 2;
@@ -242,4 +224,25 @@ const inputErrorHandlerRefacto = (fn) => {
             output.innerText = "";
         }
     };
+};
+
+// const inputErrorHandlerRefacto2 = (fn) => {
+//     return function setOutPut(output) {
+//         const output = output;
+//         return function setMessage(message) {
+//             if (fn) {
+//                 output.innerText = message;
+//             } else {
+//                 output.innerText = "";
+//             }
+//         };
+//     };
+// };
+
+const inputErrorHandlerRefacto3 = (fn) => (output) => (message) => {
+    if (fn) {
+        output.innerText = message;
+    } else {
+        output.innerText = "";
+    }
 };
