@@ -63,7 +63,9 @@ function launchModal() {
 
 //close modal
 function close() {
+    clearForm();
     modalbg.style.display = "none";
+
 }
 closeBtn.addEventListener("click", close);
 
@@ -81,7 +83,6 @@ handleFormSubmit = (e) => {
     const emailValue = inputEmail.value.trim();
     const birthdayValue = birthday.value.trim();
     const quantityValue = +inputQuantity.value.trim();
-    console.log(quantityValue);
     const citiesValues = getValueCheckBox(loc);
     const infoEvent = checkBox2.checked;
     const body = {
@@ -152,6 +153,13 @@ const clearForm = () => {
     inputEmail.value = null;
     birthday.value = null;
     inputQuantity.value = null;
+    lastErr.innerHTML = null;
+    birthErr.innerHTML = null;
+    cityErr.innerHTML = null;
+    conditiontErr.innerHTML = null;
+    firstErr.innerHTML = null;
+    emailErr.innerHTML = null;
+    tournoisErr.innerHTML= null;
 };
 
 const conditionErrorHandler = (input, message, output) => {
@@ -191,7 +199,6 @@ async function httpPostdata(body) {
             Accept: "application/json",
             "Content-Type": "application/json",
         },
-        /* ----------------------------- TODO:add value ----------------------------- */
         body: JSON.stringify(body),
     })
         .then(function (res) {
